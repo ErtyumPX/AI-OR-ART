@@ -44,7 +44,7 @@
 </head>
 <body>
 	<div id="image-container">
-		<img id="image" src="default-image.jpg" alt="A vs B">
+		<img id="image" alt="A vs B">
 		<div id="button-container">
 			<div class="button" id="button-a">A</div>
 			<div class="button" id="button-b">B</div>
@@ -52,39 +52,90 @@
 	</div>
 
 	<script>
-		 const images = ["image1.jpg", "image2.jpg", "image3.jpg"]; //an array containing image names or paths
-		 let currentImageIndex = 0; //the index of the current image in the array
-		 const imageElement = document.getElementById("image");
-		 const buttonA = document.getElementById("button-a");
-		 const buttonB = document.getElementById("button-b");
+        let number_of_used_images = 0;
+        const total_images = 275 + 209;
+        const ai_image_paths = []
+        for (let i = 0; i < 276; i++) {
+            ai_image_paths[i] = `AI_Image/ai_${i}.jpg`;
+        }
+        const human_image_paths = []
+        for (let i = 0; i < 210; i++) {
+            human_image_paths[i] = `Human_Image/human_${i}.jpg`;
+        }
+        
+        //const images = ["image1.jpg", "image2.jpg", "image3.jpg"]; //an array containing image names or paths
+        //let currentImageIndex = 0; //the index of the current image in the array
+        const imageElement = document.getElementById("image");
+        const buttonA = document.getElementById("button-a");
+        const buttonB = document.getElementById("button-b");
+        const image_start_transform = imageElement.style.transform;
+        getNewImage();
 
-		 buttonA.addEventListener("click", () => {
-			 slideImage("left");
-		 });
+        buttonA.addEventListener("click", () => {
+            slideImage("left");
+        });
 
-		 buttonB.addEventListener("click", () => {
-			 slideImage("right");
-		 });
+        buttonB.addEventListener("click", () => {
+            slideImage("right");
+        });
 
-		 imageElement.addEventListener("click", () => {
-			 slideImage("right"); //for example, clicking the image will slide it to the right
-		 });
+        imageElement.addEventListener("click", () => {
+            slideImage("right"); //for example, clicking the image will slide it to the right
+        });
 
-		 function slideImage(direction) {
-			 if (direction === "left") {
-				 currentImageIndex--;
-				 if (currentImageIndex < 0) {
-					 currentImageIndex = images.length - 1;
-				 }
-			 } else {
-				 currentImageIndex++;
-				 if (currentImageIndex >= images.length) {
-					 currentImageIndex = 0;
-				 }
-			 }
-			 imageElement.style.transform = `translateX(${direction === "left" ? "-" : ""}${currentImageIndex * 100}%)`;
-			 imageElement.src = images[currentImageIndex];
-		 }
+        function slideImage(direction) {
+            /*
+            if (direction === "left") {
+                currentImageIndex--;
+                if (currentImageIndex < 0) {
+                    currentImageIndex = images.length - 1;
+                }
+            } else {
+                currentImageIndex++;
+                if (currentImageIndex >= images.length) {
+                    currentImageIndex = 0;
+                }
+            }
+            */
+            imageElement.style.transform = `translateX(${direction === "left" ? "-" : ""}${currentImageIndex * 100}%)`;
+            setTimeout(getTheImageBack, 500);
+        }
+
+        function getTheImageBack(){
+            imageElement.style.transform = image_start_transform;
+            getNewImage();
+        }
+
+
+        function getNewImage(){
+            imageElement.src = getRandomImage();
+        }
+
+        function getRandomImage(){
+            let isImageAI = Math.random() < 0.5;
+            let chosen_image_path;
+            if (isImageAI){
+                const chosen_image_index = Math.floor(Math.random() * ai_image_paths.length);
+                chosen_image_path = ai_image_paths[chosen_image_index];
+                ai_image_paths.splice(chosen_image_index);
+            }
+            else{
+                const chosen_image_index = Math.floor(Math.random() * human_image_paths.length);
+                chosen_image_path = human_image_paths[chosen_image_index];
+                human_image_paths.splice(chosen_image_index);
+            }
+            if (number_of_used_images++ == total_images){
+                number_of_used_images = 0;
+                for (let i = 0; i < 276; i++) {
+                    ai_image_paths[i] = `AI_Image/ai_${i}.jpg`;
+                }
+                for (let i = 0; i < 210; i++) {
+                    human_image_paths[i] = `Human_Image/human_${i}.jpg`;
+                }
+            }
+            return chosen_image_path;
+        }
+
 	</script>
 </body>
 </html>
