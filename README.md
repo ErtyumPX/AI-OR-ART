@@ -12,7 +12,4 @@ Only dependincy is PyGame Library with a version higher than 2.0.0.
 
 ## Setup
 
-To run the app, double click the file named ``main.py`` or open the console in the same directiory and run the following command:
-``cmd
-py main.py
-``
+To run the app, double click the file named ``main.py`` or open the console in the same directiory and run the following command: ``py main.py``
